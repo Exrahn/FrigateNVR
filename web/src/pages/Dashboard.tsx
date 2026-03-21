@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { useAllowedCameras } from "@/hooks/use-allowed-cameras";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import {
   LuVideo,
   LuShieldAlert,
@@ -20,7 +20,7 @@ import {
 } from "react-icons/lu";
 import TimeAgo from "@/components/dynamic/TimeAgo";
 
-const container = {
+const container: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -28,7 +28,7 @@ const container = {
   },
 };
 
-const item = {
+const item: Variants = {
   hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
