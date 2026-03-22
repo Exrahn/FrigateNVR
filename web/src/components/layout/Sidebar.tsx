@@ -242,7 +242,11 @@ export default function AppSidebar() {
         <button
           onClick={() => setCollapsed(!isCollapsed)}
           className="mt-1 flex w-full items-center justify-center rounded-md py-1.5 text-secondary-foreground transition-colors hover:bg-muted hover:text-foreground"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={
+            isCollapsed
+              ? t("sidebar.expandSidebar", { defaultValue: "Expand sidebar" })
+              : t("sidebar.collapseSidebar", { defaultValue: "Collapse sidebar" })
+          }
         >
           {isCollapsed ? (
             <LuChevronRight className="size-4" />

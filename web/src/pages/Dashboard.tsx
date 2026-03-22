@@ -199,7 +199,8 @@ export default function Dashboard() {
           </span>
           {stats?.service?.version && (
             <span className="ml-auto text-xs text-secondary-foreground/60">
-              Frigate v{stats.service.version}
+              {t("dashboard.versionLabel", { defaultValue: "Frigate v" })}
+              {stats.service.version}
             </span>
           )}
         </motion.div>
@@ -284,7 +285,7 @@ export default function Dashboard() {
                 </span>
                 {camStats && (
                   <span className="text-xs text-secondary-foreground">
-                    {camStats.camera_fps.toFixed(0)} fps
+                    {camStats.camera_fps.toFixed(0)} {t("unit.fps", { defaultValue: "fps" })}
                   </span>
                 )}
               </div>
