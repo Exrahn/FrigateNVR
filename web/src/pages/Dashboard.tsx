@@ -21,7 +21,6 @@ import {
 } from "react-icons/lu";
 import TimeAgo from "@/components/dynamic/TimeAgo";
 import NotificationBell from "@/components/navigation/NotificationBell";
-import DarkModeSelect from "@/components/settings/DarkModeSelect";
 
 const container: Variants = {
   hidden: { opacity: 0 },
@@ -143,13 +142,12 @@ export default function Dashboard() {
 
   return (
     <div className="flex size-full flex-col overflow-hidden">
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="flex h-12 shrink-0 items-center justify-between border-b border-secondary-highlight bg-background px-4">
         <h1 className="text-sm font-semibold text-foreground">
           {t("menu.dashboard", { defaultValue: "Tableau de bord" })}
         </h1>
         <div className="flex items-center gap-1">
-          {/* Raccourci palette de commandes */}
           <button
             className="hidden items-center gap-1.5 rounded-md border border-secondary-highlight bg-muted px-2.5 py-1 text-xs text-secondary-foreground transition-colors hover:bg-background md:flex"
             onClick={() =>
@@ -166,11 +164,10 @@ export default function Dashboard() {
             </kbd>
           </button>
           <NotificationBell />
-          <DarkModeSelect />
         </div>
       </header>
 
-      {/* ── Contenu scrollable ── */}
+      {/* Scrollable content */}
       <motion.div
         className="scrollbar-container flex-1 overflow-y-auto p-4 md:p-6"
         variants={container}
@@ -182,7 +179,7 @@ export default function Dashboard() {
           <StatsCard
             icon={<LuVideo className="size-5" />}
             label={t("dashboard.camerasOnline", {
-              defaultValue: "Caméras en ligne",
+              defaultValue: "Cam\u00e9ras en ligne",
             })}
             value={`${onlineCameras} / ${cameras.length}`}
             color="text-green-500"
@@ -196,7 +193,7 @@ export default function Dashboard() {
           <StatsCard
             icon={<LuShieldAlert className="size-5" />}
             label={t("dashboard.detections24h", {
-              defaultValue: "Détections (24h)",
+              defaultValue: "D\u00e9tections (24h)",
             })}
             value={`${totalDetections}`}
             color="text-yellow-500"
@@ -240,14 +237,14 @@ export default function Dashboard() {
           className="mb-3 flex items-center justify-between"
         >
           <h2 className="text-base font-semibold text-foreground">
-            {t("dashboard.cameras", { defaultValue: "Caméras" })}
+            {t("dashboard.cameras", { defaultValue: "Cam\u00e9ras" })}
           </h2>
           <div className="flex items-center gap-2">
             <button
               onClick={refreshThumbnails}
               className="rounded-md p-1.5 text-secondary-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label={t("dashboard.refreshThumbnails", {
-                defaultValue: "Rafraîchir les miniatures",
+                defaultValue: "Rafra\u00eechir les miniatures",
               })}
             >
               <LuRefreshCw className="size-4" />
@@ -333,7 +330,7 @@ export default function Dashboard() {
           className="mb-3 flex items-center justify-between"
         >
           <h2 className="text-base font-semibold text-foreground">
-            {t("dashboard.recentEvents", { defaultValue: "Événements récents" })}
+            {t("dashboard.recentEvents", { defaultValue: "\u00c9v\u00e9nements r\u00e9cents" })}
           </h2>
           {recentEvents && recentEvents.length > 0 && (
             <button
@@ -424,7 +421,7 @@ export default function Dashboard() {
             className="rounded-lg border border-secondary-highlight bg-background_alt p-8 text-center text-sm text-secondary-foreground"
           >
             {t("dashboard.noRecentEvents", {
-              defaultValue: "Aucun événement récent",
+              defaultValue: "Aucun \u00e9v\u00e9nement r\u00e9cent",
             })}
           </motion.div>
         )}

@@ -19,7 +19,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
 } from "react-icons/lu";
-import { MdVideoLibrary, MdCategory, MdChat } from "react-icons/md";
+import { MdVideoLibrary, MdCategory } from "react-icons/md";
 import { TbFaceId } from "react-icons/tb";
 import { usePersistence } from "@/hooks/use-persistence";
 
@@ -112,12 +112,6 @@ export default function AppSidebar() {
           label: t("menu.classification", { defaultValue: "Classification" }),
           url: "/classification",
           enabled: isAdmin,
-        },
-        {
-          icon: MdChat,
-          label: t("menu.chat", { defaultValue: "Chat" }),
-          url: "/chat",
-          enabled: isAdmin && config?.genai?.model !== "none",
         },
         {
           icon: LuConstruction,
