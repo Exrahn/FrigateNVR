@@ -3,7 +3,6 @@ import * as monaco from "monaco-editor";
 import { configureMonacoYaml } from "monaco-yaml";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useApiHost } from "@/api";
-import Heading from "@/components/ui/heading";
 import ActivityIndicator from "@/components/indicators/activity-indicator";
 import { Button } from "@/components/ui/button";
 import axios, { AxiosError } from "axios";
@@ -266,9 +265,6 @@ function ConfigEditor() {
       <div className="relative flex h-full flex-col overflow-hidden">
         <div className="mr-1 flex items-center justify-between">
           <div>
-            <Heading as="h2" className="mb-0 ml-1 md:ml-0">
-              {t(config?.safe_mode ? "safeConfigEditor" : "configEditor")}
-            </Heading>
             {config?.safe_mode && (
               <div className="text-sm text-secondary-foreground">
                 {t("safeModeDescription")}
