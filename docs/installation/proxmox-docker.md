@@ -133,6 +133,8 @@ apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt install -y nodejs
 
+apt install npm
+
 # Vérification
 docker --version
 docker compose version
