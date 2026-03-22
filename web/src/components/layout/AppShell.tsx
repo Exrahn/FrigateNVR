@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import AppSidebar from "./Sidebar";
-import AppHeader from "./Header";
 import { usePersistence } from "@/hooks/use-persistence";
 import { cn } from "@/lib/utils";
 import { isDesktop, isMobile } from "react-device-detect";
 import Bottombar from "../navigation/Bottombar";
 import Statusbar from "../Statusbar";
 import CommandPalette from "../navigation/CommandPalette";
+import { isPWA } from "@/utils/isPWA";
 
 type AppShellProps = {
   children: ReactNode;
@@ -18,11 +18,13 @@ export default function AppShell({ children }: AppShellProps) {
 
   if (isMobile) {
     return (
-      <div className="flex h-dvh w-full flex-col overflow-hidden">
+      <div className="size-full overflow-hidden">
         <CommandPalette />
         <div
+          id="pageRoot"
           className={cn(
-            "flex-1 overflow-hidden",
+            "absolute left-0 right-0 top-0 overflow-hidden",
+            `bottom-${isPWA ? 16 : 12} md:bottom-16 landscape:bottom-14 landscape:md:bottom-16`,
           )}
         >
           {children}
@@ -32,21 +34,21 @@ export default function AppShell({ children }: AppShellProps) {
     );
   }
 
+  // Desktop: absolute positioning matching original Frigate layout
+  // so all existing pages render correctly
   return (
-    <div className="flex h-dvh w-full overflow-hidden">
+    <div className="size-full overflow-hidden">
       <CommandPalette />
       {isDesktop && <AppSidebar />}
+      {isDesktop && <Statusbar />}
       <div
+        id="pageRoot"
         className={cn(
-          "flex flex-1 flex-col overflow-hidden transition-all duration-200",
-          isDesktop && (isCollapsed ? "ml-16" : "ml-56"),
+          "absolute right-0 top-0 bottom-8 overflow-hidden transition-all duration-200",
+          isDesktop && (isCollapsed ? "left-[52px]" : "left-56"),
         )}
       >
-        {isDesktop && <AppHeader />}
-        <main className="flex-1 overflow-hidden pb-8">
-          {children}
-        </main>
-        {isDesktop && <Statusbar />}
+        {children}
       </div>
     </div>
   );

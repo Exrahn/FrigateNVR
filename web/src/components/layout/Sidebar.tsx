@@ -140,18 +140,18 @@ export default function AppSidebar() {
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-20 flex flex-col border-r border-secondary-highlight bg-background_alt transition-all duration-200",
-        isCollapsed ? "w-16" : "w-56",
+        isCollapsed ? "w-[52px]" : "w-56",
       )}
     >
       {/* Logo */}
       <div
         className={cn(
-          "flex h-14 shrink-0 items-center border-b border-secondary-highlight px-4",
-          isCollapsed ? "justify-center" : "gap-3",
+          "flex h-12 shrink-0 items-center border-b border-secondary-highlight",
+          isCollapsed ? "justify-center px-2" : "gap-3 px-4",
         )}
       >
         <NavLink to="/">
-          <Logo className="h-7 w-7 shrink-0" />
+          <Logo className="size-6 shrink-0" />
         </NavLink>
         {!isCollapsed && (
           <span className="text-sm font-semibold text-foreground">
@@ -188,8 +188,8 @@ export default function AppSidebar() {
                       key={item.url}
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 rounded-md px-2.5 py-2 text-sm font-medium transition-colors",
-                        isCollapsed && "justify-center px-0",
+                        "flex items-center gap-3 rounded-md py-2 text-sm font-medium transition-colors",
+                        isCollapsed ? "justify-center px-0" : "px-2.5",
                         active
                           ? "bg-selected text-white"
                           : "text-secondary-foreground hover:bg-muted hover:text-foreground",
@@ -209,13 +209,13 @@ export default function AppSidebar() {
         })}
       </nav>
 
-      {/* Settings link + Collapse toggle */}
+      {/* Footer: Settings + shortcuts + collapse */}
       <div className="shrink-0 border-t border-secondary-highlight px-2 py-2">
         <NavLink
           to="/settings"
           className={cn(
-            "flex items-center gap-3 rounded-md px-2.5 py-2 text-sm font-medium transition-colors",
-            isCollapsed && "justify-center px-0",
+            "flex items-center gap-3 rounded-md py-2 text-sm font-medium transition-colors",
+            isCollapsed ? "justify-center px-0" : "px-2.5",
             isActive("/settings")
               ? "bg-selected text-white"
               : "text-secondary-foreground hover:bg-muted hover:text-foreground",
