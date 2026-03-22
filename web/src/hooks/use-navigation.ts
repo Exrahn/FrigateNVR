@@ -5,12 +5,13 @@ import { useMemo } from "react";
 import { isDesktop } from "react-device-detect";
 import { FaCompactDisc, FaVideo } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
-import { LuConstruction } from "react-icons/lu";
+import { LuConstruction, LuLayoutDashboard } from "react-icons/lu";
 import { MdCategory, MdChat, MdVideoLibrary } from "react-icons/md";
 import { TbFaceId } from "react-icons/tb";
 import useSWR from "swr";
 import { useIsAdmin } from "./use-is-admin";
 
+export const ID_DASHBOARD = 0;
 export const ID_LIVE = 1;
 export const ID_REVIEW = 2;
 export const ID_EXPLORE = 3;
@@ -32,11 +33,19 @@ export default function useNavigation(
     () =>
       [
         {
+          id: ID_DASHBOARD,
+          variant,
+          icon: LuLayoutDashboard,
+          title: "menu.dashboard",
+          url: "/",
+          end: true,
+        },
+        {
           id: ID_LIVE,
           variant,
           icon: FaVideo,
           title: "menu.live.title",
-          url: "/",
+          url: "/live",
         },
         {
           id: ID_REVIEW,

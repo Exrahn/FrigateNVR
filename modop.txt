@@ -1,0 +1,213 @@
+Rebuild le frontend :
+
+cd /root/ModernNVR && git pull && DOCKER_BUILDKIT=0 docker compose build --no-cache frontend && docker compose up -d frontend Nginx
+
+
+
+Rebuild le backend :
+cd /root/ModernNVR && git pull && DOCKER_BUILDKIT=0 docker compose build --no-cache backend && docker compose up -d backend
+
+
+
+
+
+
+
+
+rtsp://cam-exrah:K13asv7weh3lxd10a12!@192.168.1.69:554/stream1
+
+
+
+
+cat > /opt/frigate/config/config.yml << 'EOF'
+mqtt:
+  enabled: false
+
+detectors:
+  cpu:
+    type: cpu
+
+cameras:
+  Cuisine:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: rtsp://cam-exrah:K13asv7weh3lxd10a12%21@192.168.1.69:554/stream1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 2304
+      height: 1296
+      fps: 5
+    record:
+      enabled: true
+      alerts:
+        retain:
+          days: 180
+      detections:
+        retain:
+          days: 180
+      motion:
+        days: 60
+    snapshots:
+      enabled: true
+      retain:
+        default: 14
+
+version: 0.17-0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  GNU nano 7.2                                                   /opt/frigate/nginx/nginx.conf         
+-------------------------------------------------------------------------
+
+
+
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+
+    server {
+        listen 80;
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/ssl/frigate.crt;
+        ssl_certificate_key /etc/nginx/ssl/frigate.key;
+
+        location / {
+            proxy_pass http://frigate:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_buffering off;
+        }
+    }
+}
+
+
+
+
+
+
+                                                                  
+
+
+
+
+
+cat > /opt/frigate/nginx/nginx.conf << 'EOF'
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+
+    server {
+        listen 80;
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/ssl/frigate.crt;
+        ssl_certificate_key /etc/nginx/ssl/frigate.key;
+
+        location / {
+            proxy_pass http://frigate:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_buffering off;
+        }
+    }
+}
+EOF
+
+
+
+-------------------------------------------------------------------------------------------------
+docker compose
+--------------------------------------------------------------------------------------------------
+
+
+
+services:
+  frigate:
+    container_name: frigate
+    image: ghcr.io/blakeblackshear/frigate:stable
+    restart: unless-stopped
+    privileged: true
+    shm_size: "256mb"
+    expose:
+      - "5000"
+    ports:
+      - "8554:8554"
+      - "8555:8555"
+      - "8555:8555/udp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /opt/frigate/config:/config
+      - /opt/frigate/web:/opt/frigate/web
+      - /opt/frigate/storage:/media/frigate
+    networks:
+      - frigate_net
+
+  nginx:
+    container_name: frigate-nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:                                                                                                                                                                            - /opt/frigate/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/frigate/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frigate
+    networks:
+      - frigate_net
+
+networks:
+  frigate_net:
+    driver: bridge
+
+
+

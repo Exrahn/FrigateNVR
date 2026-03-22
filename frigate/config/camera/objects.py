@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
 
-from pydantic import Field, PrivateAttr, field_serializer, field_validator
+from pydantic import Field, PrivateAttr, field_serializer, field_validator, model_validator
 
 from ..base import FrigateBaseModel
 from .mask import ObjectMaskConfig
@@ -50,6 +50,25 @@ class FilterConfig(FrigateBaseModel):
     raw_mask: dict[str, Optional[ObjectMaskConfig]] = Field(
         default_factory=dict, exclude=True
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def convert_old_mask_format(cls, data: Any) -> Any:
+        """Convert legacy mask format (str or List[str]) to the named-dict format."""
+        if not isinstance(data, dict):
+            return data
+        mask = data.get("mask")
+        if isinstance(mask, str):
+            data["mask"] = (
+                {"mask_0": {"coordinates": mask, "enabled": True}} if mask else {}
+            )
+        elif isinstance(mask, list):
+            data["mask"] = {
+                f"mask_{i}": {"coordinates": coord, "enabled": True}
+                for i, coord in enumerate(mask)
+                if isinstance(coord, str) and coord
+            }
+        return data
 
     @field_serializer("mask", when_used="json")
     def serialize_mask(self, value: Any, info):
@@ -158,6 +177,25 @@ class ObjectConfig(FrigateBaseModel):
         description="GenAI options for describing tracked objects and sending frames for generation.",
     )
     _all_objects: list[str] = PrivateAttr()
+
+    @model_validator(mode="before")
+    @classmethod
+    def convert_old_mask_format(cls, data: Any) -> Any:
+        """Convert legacy mask format (str or List[str]) to the named-dict format."""
+        if not isinstance(data, dict):
+            return data
+        mask = data.get("mask")
+        if isinstance(mask, str):
+            data["mask"] = (
+                {"mask_0": {"coordinates": mask, "enabled": True}} if mask else {}
+            )
+        elif isinstance(mask, list):
+            data["mask"] = {
+                f"mask_{i}": {"coordinates": coord, "enabled": True}
+                for i, coord in enumerate(mask)
+                if isinstance(coord, str) and coord
+            }
+        return data
 
     @property
     def all_objects(self) -> list[str]:

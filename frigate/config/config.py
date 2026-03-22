@@ -102,8 +102,24 @@ class RuntimeMotionConfig(MotionConfig):
     def __init__(self, **config):
         frame_shape = config.get("frame_shape", (1, 1))
 
-        # Store original mask dict for serialization
+        # Normalize legacy mask formats (str / List[str]) to the named-dict format
         original_mask = config.get("mask", {})
+        if isinstance(original_mask, str):
+            original_mask = (
+                {"mask_0": {"coordinates": original_mask, "enabled": True}}
+                if original_mask
+                else {}
+            )
+            config["mask"] = original_mask
+        elif isinstance(original_mask, list):
+            original_mask = {
+                f"mask_{i}": {"coordinates": coord, "enabled": True}
+                for i, coord in enumerate(original_mask)
+                if isinstance(coord, str) and coord
+            }
+            config["mask"] = original_mask
+
+        # Store original mask dict for serialization
         if isinstance(original_mask, dict):
             # Process the new dict format - update raw_coordinates for each mask
             processed_mask = {}
@@ -154,8 +170,24 @@ class RuntimeFilterConfig(FilterConfig):
     def __init__(self, **config):
         frame_shape = config.get("frame_shape", (1, 1))
 
-        # Store original mask dict for serialization
+        # Normalize legacy mask formats (str / List[str]) to the named-dict format
         original_mask = config.get("mask", {})
+        if isinstance(original_mask, str):
+            original_mask = (
+                {"mask_0": {"coordinates": original_mask, "enabled": True}}
+                if original_mask
+                else {}
+            )
+            config["mask"] = original_mask
+        elif isinstance(original_mask, list):
+            original_mask = {
+                f"mask_{i}": {"coordinates": coord, "enabled": True}
+                for i, coord in enumerate(original_mask)
+                if isinstance(coord, str) and coord
+            }
+            config["mask"] = original_mask
+
+        # Store original mask dict for serialization
         if isinstance(original_mask, dict):
             # Process the new dict format - update raw_coordinates for each mask
             processed_mask = {}

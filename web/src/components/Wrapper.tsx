@@ -5,7 +5,7 @@ type TWrapperProps = {
 };
 
 const Wrapper = ({ children }: TWrapperProps) => {
-  return <main className="h-dvh w-full overflow-hidden">{children}</main>;
+  return <div className="h-dvh w-full overflow-hidden">{children}</div>;
 };
 
 export default Wrapper;

@@ -259,6 +259,7 @@
     "faceLibrary": "Face Library",
     "classification": "Classification",
     "chat": "Chat",
+    "dashboard": "Dashboard",
     "user": {
       "title": "User",
       "account": "Account",
@@ -310,5 +311,34 @@
   "readTheDocumentation": "Read the documentation",
   "information": {
     "pixels": "{{area}}px"
+  },
+  "dashboard": {
+    "camerasOnline": "Cameras Online",
+    "recording": "Recording",
+    "detections24h": "Detections (24h)",
+    "storage": "Storage",
+    "uptime": "Uptime",
+    "cameras": "Cameras",
+    "recentEvents": "Recent Events",
+    "noRecentEvents": "No recent events",
+    "online": "Online",
+    "offline": "Offline",
+    "viewAll": "View all",
+    "refreshThumbnails": "Refresh thumbnails"
+  },
+  "commandPalette": {
+    "placeholder": "Search pages, cameras...",
+    "noResults": "No results found.",
+    "navigation": "Navigation",
+    "cameras": "Cameras",
+    "open": "Search",
+    "search": "Search...",
+    "shortcutHint": "Quick search"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "recentAlerts": "Recent alerts (24h)",
+    "noAlerts": "No recent alerts",
+    "viewAll": "View all events"
   }
 }

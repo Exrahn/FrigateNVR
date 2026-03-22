@@ -243,7 +243,9 @@
     "uiPlayground": "Bac à sable de l'interface",
     "faceLibrary": "Bibliothèque de visages",
     "languages": "Langues",
-    "classification": "Classification"
+    "classification": "Classification",
+    "chat": "Chat",
+    "dashboard": "Tableau de bord"
   },
   "toast": {
     "save": {
@@ -323,5 +325,15 @@
     "two": "{{0}} et {{1}}",
     "many": "{{items}}, et {{last}}",
     "separatorWithSpace": ", "
+  },
+  "dashboard": {
+    "camerasOnline": "Caméras en ligne",
+    "recording": "En enregistrement",
+    "detections24h": "Détections (24h)",
+    "storage": "Stockage",
+    "uptime": "Disponibilité",
+    "cameras": "Caméras",
+    "recentEvents": "Événements récents",
+    "noRecentEvents": "Aucun événement récent"
   }
 }

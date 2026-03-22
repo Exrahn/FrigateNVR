@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from pydantic import Field, field_serializer
+from pydantic import Field, field_serializer, model_validator
 
 from ..base import FrigateBaseModel
 from .mask import MotionMaskConfig
@@ -78,6 +78,25 @@ class MotionConfig(FrigateBaseModel):
     raw_mask: dict[str, Optional[MotionMaskConfig]] = Field(
         default_factory=dict, exclude=True
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def convert_old_mask_format(cls, data: Any) -> Any:
+        """Convert legacy mask format (str or List[str]) to the named-dict format."""
+        if not isinstance(data, dict):
+            return data
+        mask = data.get("mask")
+        if isinstance(mask, str):
+            data["mask"] = (
+                {"mask_0": {"coordinates": mask, "enabled": True}} if mask else {}
+            )
+        elif isinstance(mask, list):
+            data["mask"] = {
+                f"mask_{i}": {"coordinates": coord, "enabled": True}
+                for i, coord in enumerate(mask)
+                if isinstance(coord, str) and coord
+            }
+        return data
 
     @field_serializer("mask", when_used="json")
     def serialize_mask(self, value: Any, info):

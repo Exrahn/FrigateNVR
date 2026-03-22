@@ -43,6 +43,7 @@ export default function NavItem({
   const content = (
     <NavLink
       to={item.url}
+      end={item.end}
       onClick={onClick}
       className={({ isActive }) =>
         cn(

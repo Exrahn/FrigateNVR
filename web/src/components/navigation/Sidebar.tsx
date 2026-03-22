@@ -4,14 +4,14 @@ import { CameraGroupSelector } from "../filter/CameraGroupSelector";
 import { Link, useMatch } from "react-router-dom";
 import GeneralSettings from "../menu/GeneralSettings";
 import AccountSettings from "../menu/AccountSettings";
-import useNavigation from "@/hooks/use-navigation";
+import useNavigation, { ID_LIVE } from "@/hooks/use-navigation";
 import { baseUrl } from "@/api/baseUrl";
 import { useMemo } from "react";
 
 function Sidebar() {
   const basePath = useMemo(() => new URL(baseUrl).pathname, []);
 
-  const isRootMatch = useMatch("/");
+  const isLiveMatch = useMatch("/live");
   const isBasePathMatch = useMatch(basePath);
 
   const navbarLinks = useNavigation();
@@ -25,7 +25,7 @@ function Sidebar() {
         </Link>
         {navbarLinks.map((item) => {
           const showCameraGroups =
-            (isRootMatch || isBasePathMatch) && item.id === 1;
+            (isLiveMatch || isBasePathMatch) && item.id === ID_LIVE;
 
           return (
             <div key={item.id}>

@@ -7,4 +7,5 @@ export type NavData = {
   title: string;
   url: string;
   enabled?: boolean;
+  end?: boolean;
 };
