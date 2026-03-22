@@ -1,0 +1,54 @@
+{
+  "title": "Replay de débogage",
+  "description": "Rejouer des enregistrements de caméras pour le débogage. La liste d'objets affiche un résumé décalé dans le temps des objets détectés et l'onglet Messages affiche un flux des messages internes de Frigate.",
+  "websocket_messages": "Messages",
+  "dialog": {
+    "title": "Démarrer le replay de débogage",
+    "description": "Créez une caméra de replay temporaire qui rejoue des séquences historiques pour déboguer la détection et le suivi d'objets. La caméra de replay aura la même configuration de détection que la caméra source. Choisissez une plage horaire pour commencer.",
+    "camera": "Caméra source",
+    "timeRange": "Plage horaire",
+    "preset": {
+      "1m": "Dernière 1 minute",
+      "5m": "5 dernières minutes",
+      "timeline": "Depuis la chronologie",
+      "custom": "Personnalisé"
+    },
+    "startButton": "Démarrer le replay",
+    "selectFromTimeline": "Sélectionner",
+    "starting": "Démarrage du replay...",
+    "startLabel": "Début",
+    "endLabel": "Fin",
+    "toast": {
+      "success": "Replay de débogage démarré avec succès",
+      "error": "Échec du démarrage du replay de débogage : {{error}}",
+      "alreadyActive": "Une session de replay est déjà active",
+      "stopped": "Replay de débogage arrêté",
+      "stopError": "Échec de l'arrêt du replay de débogage : {{error}}",
+      "goToReplay": "Aller au replay"
+    }
+  },
+  "page": {
+    "noSession": "Aucune session de replay active",
+    "noSessionDesc": "Démarrez un replay de débogage depuis la vue Historique en cliquant sur le bouton Replay de débogage dans la barre d'outils.",
+    "goToRecordings": "Aller à l'historique",
+    "sourceCamera": "Caméra source",
+    "replayCamera": "Caméra de replay",
+    "initializingReplay": "Initialisation du replay...",
+    "stoppingReplay": "Arrêt du replay...",
+    "stopReplay": "Arrêter le replay",
+    "confirmStop": {
+      "title": "Arrêter le replay de débogage ?",
+      "description": "Cela arrêtera la session de replay et nettoiera toutes les données temporaires. Êtes-vous sûr ?",
+      "confirm": "Arrêter le replay",
+      "cancel": "Annuler"
+    },
+    "activity": "Activité",
+    "objects": "Liste d'objets",
+    "audioDetections": "Détections audio",
+    "noActivity": "Aucune activité détectée",
+    "activeTracking": "Suivi actif",
+    "noActiveTracking": "Aucun suivi actif",
+    "configuration": "Configuration",
+    "configurationDesc": "Affinez les paramètres de détection de mouvement et de suivi d'objets pour la caméra de replay de débogage. Aucune modification n'est enregistrée dans votre fichier de configuration Frigate."
+  }
+}

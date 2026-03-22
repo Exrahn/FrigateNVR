@@ -1,0 +1,75 @@
+{
+  "documentTitle": "Recherche de mouvement - Frigate",
+  "title": "Recherche de mouvement",
+  "description": "Dessinez un polygone pour définir la zone d'intérêt et spécifiez une plage horaire pour rechercher les changements de mouvement dans cette région.",
+  "selectCamera": "Chargement de la recherche de mouvement",
+  "startSearch": "Lancer la recherche",
+  "searchStarted": "Recherche démarrée",
+  "searchCancelled": "Recherche annulée",
+  "cancelSearch": "Annuler",
+  "searching": "Recherche en cours.",
+  "searchComplete": "Recherche terminée",
+  "noResultsYet": "Lancez une recherche pour trouver des changements de mouvement dans la zone sélectionnée",
+  "noChangesFound": "Aucun changement de pixels détecté dans la zone sélectionnée",
+  "changesFound_one": "{{count}} changement de mouvement trouvé",
+  "changesFound_other": "{{count}} changements de mouvement trouvés",
+  "framesProcessed": "{{count}} images traitées",
+  "jumpToTime": "Aller à ce moment",
+  "results": "Résultats",
+  "showSegmentHeatmap": "Carte de chaleur",
+  "newSearch": "Nouvelle recherche",
+  "clearResults": "Effacer les résultats",
+  "clearROI": "Effacer le polygone",
+  "polygonControls": {
+    "points_one": "{{count}} point",
+    "points_other": "{{count}} points",
+    "undo": "Annuler le dernier point",
+    "reset": "Réinitialiser le polygone"
+  },
+  "motionHeatmapLabel": "Carte de chaleur du mouvement",
+  "dialog": {
+    "title": "Recherche de mouvement",
+    "cameraLabel": "Caméra",
+    "previewAlt": "Aperçu de la caméra {{camera}}"
+  },
+  "timeRange": {
+    "title": "Plage de recherche",
+    "start": "Heure de début",
+    "end": "Heure de fin"
+  },
+  "settings": {
+    "title": "Paramètres de recherche",
+    "parallelMode": "Mode parallèle",
+    "parallelModeDesc": "Analyser plusieurs segments d'enregistrement simultanément (plus rapide, mais beaucoup plus gourmand en CPU)",
+    "threshold": "Seuil de sensibilité",
+    "thresholdDesc": "Des valeurs plus basses détectent des changements plus petits (1-255)",
+    "minArea": "Zone de changement minimale",
+    "minAreaDesc": "Pourcentage minimum de la zone d'intérêt qui doit changer pour être considéré comme significatif",
+    "frameSkip": "Saut d'images",
+    "frameSkipDesc": "Traite chaque Nième image. Réglez sur la fréquence d'images de votre caméra pour traiter une image par seconde (ex : 5 pour 5 FPS, 30 pour 30 FPS). Des valeurs plus élevées sont plus rapides mais peuvent manquer des événements courts.",
+    "maxResults": "Résultats maximum",
+    "maxResultsDesc": "S'arrêter après ce nombre de correspondances"
+  },
+  "errors": {
+    "noCamera": "Veuillez sélectionner une caméra",
+    "noROI": "Veuillez dessiner une zone d'intérêt",
+    "noTimeRange": "Veuillez sélectionner une plage horaire",
+    "invalidTimeRange": "L'heure de fin doit être après l'heure de début",
+    "searchFailed": "Recherche échouée : {{message}}",
+    "polygonTooSmall": "Le polygone doit avoir au moins 3 points",
+    "unknown": "Erreur inconnue"
+  },
+  "changePercentage": "{{percentage}}% modifié",
+  "metrics": {
+    "title": "Métriques de recherche",
+    "segmentsScanned": "Segments analysés",
+    "segmentsProcessed": "Traités",
+    "segmentsSkippedInactive": "Ignorés (aucune activité)",
+    "segmentsSkippedHeatmap": "Ignorés (pas de chevauchement ROI)",
+    "fallbackFullRange": "Analyse complète de secours",
+    "framesDecoded": "Images décodées",
+    "wallTime": "Durée de recherche",
+    "segmentErrors": "Erreurs de segment",
+    "seconds": "{{seconds}}s"
+  }
+}

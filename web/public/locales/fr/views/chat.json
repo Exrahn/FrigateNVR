@@ -1,0 +1,24 @@
+{
+  "title": "Frigate Chat",
+  "subtitle": "Votre assistant IA pour la gestion des caméras et les informations",
+  "placeholder": "Posez une question...",
+  "error": "Une erreur s'est produite. Veuillez réessayer.",
+  "processing": "Traitement en cours...",
+  "toolsUsed": "Utilisé : {{tools}}",
+  "showTools": "Afficher les outils ({{count}})",
+  "hideTools": "Masquer les outils",
+  "call": "Appel",
+  "result": "Résultat",
+  "arguments": "Arguments :",
+  "response": "Réponse :",
+  "send": "Envoyer",
+  "suggested_requests": "Essayez de demander :",
+  "starting_requests": {
+    "show_recent_events": "Afficher les événements récents",
+    "show_camera_status": "Afficher l'état des caméras"
+  },
+  "starting_requests_prompts": {
+    "show_recent_events": "Montre-moi les événements récents de la dernière heure",
+    "show_camera_status": "Quel est l'état actuel de mes caméras ?"
+  }
+}
