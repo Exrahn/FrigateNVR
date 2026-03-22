@@ -11,9 +11,9 @@ Ce guide couvre l'installation complète de FrigateNVR dans un conteneur LXC Pro
 3. [Installer Docker](#étape-3--installer-docker)
 4. [Préparer la structure des dossiers](#étape-4--préparer-la-structure-des-dossiers)
 5. [Configurer Frigate](#étape-5--configurer-frigate)
-6. [Déployer avec Docker Compose + Nginx HTTPS](#étape-6--déployer-avec-docker-compose--nginx-https)
-7. [Configurer Nginx (HTTPS)](#étape-7--configurer-nginx-https)
-8. [Builder le frontend modernisé](#étape-8--builder-le-frontend-modernisé)
+6. [Builder le frontend modernisé](#étape-6--builder-le-frontend-modernisé)
+7. [Déployer avec Docker Compose + Nginx HTTPS](#étape-7--déployer-avec-docker-compose--nginx-https)
+8. [Configurer Nginx (HTTPS)](#étape-8--configurer-nginx-https)
 9. [Démarrer et vérifier](#étape-9--démarrer-et-vérifier)
 10. [Maintenance](#maintenance)
 11. [Dépannage](#dépannage)
@@ -144,8 +144,11 @@ node --version
 ## Étape 4 : Préparer la structure des dossiers
 
 ```bash
-mkdir -p /opt/frigate/{config,storage,nginx/ssl}
+mkdir -p /opt/frigate/{config,storage,web,nginx/ssl}
 ```
+
+> Le dossier `/opt/frigate/web/` recevra les fichiers du frontend buildé.
+> Il sera monté **par-dessus** le dossier web intégré dans l'image Docker Frigate.
 
 ---
 
@@ -210,11 +213,46 @@ nano /opt/frigate/config/config.yml
 
 ---
 
-## Étape 6 : Déployer avec Docker Compose + Nginx HTTPS
+## Étape 6 : Builder le frontend modernisé
 
-> **Important** : Le frontend Frigate est servi par nginx **à l'intérieur** du container Frigate,
-> depuis le dossier `/opt/frigate/web/`. Le volume mount remplace ces fichiers par notre build
-> modernisé.
+> ⚠️ **Cette étape doit être faite AVANT de démarrer les containers** pour que le dossier
+> `/opt/frigate/web/` soit rempli avant le montage du volume.
+
+```bash
+cd /opt
+git clone https://github.com/Exrahn/FrigateNVR.git frigate-src
+cd frigate-src
+git checkout frontend-modernization
+cd web
+npm install
+
+# Augmenter la mémoire Node.js (obligatoire — le build est volumineux)
+export NODE_OPTIONS="--max-old-space-size=4096"
+npm run build
+
+# Post-build : déplacer les fichiers Monaco Editor et nettoyer BASE_PATH
+mv dist/BASE_PATH/monacoeditorwork/* dist/assets/ 2>/dev/null || true
+rm -rf dist/BASE_PATH
+
+# Copier les fichiers buildés vers le dossier hôte qui sera monté dans le container
+cp -r dist/* /opt/frigate/web/
+```
+
+Vérifier le résultat :
+
+```bash
+ls /opt/frigate/web/
+# Doit afficher : index.html  login.html  assets/  locales/  fonts/  images/  ...
+```
+
+---
+
+## Étape 7 : Déployer avec Docker Compose + Nginx HTTPS
+
+> **Comment fonctionne le remplacement du frontend :**
+> L'image Docker Frigate intègre ses propres fichiers web dans `/opt/frigate/web/`.
+> On monte le dossier hôte `/opt/frigate/web/` par-dessus ce chemin (sans `:ro`)
+> pour que notre build personnalisé soit servi à la place.
 
 ```bash
 cat > /opt/frigate/docker-compose.yml << 'EOF'
@@ -233,10 +271,11 @@ services:
       - "8555:8555/udp"   # WebRTC (UDP)
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config:/config
-      - ./storage:/media/frigate
-      # Monte le frontend modernisé par-dessus le frontend par défaut
-      - /opt/frigate-src/web/dist:/opt/frigate/web:ro
+      - /opt/frigate/config:/config
+      - /opt/frigate/storage:/media/frigate
+      # Remplace le frontend intégré par notre build modernisé
+      # ⚠️  Pas de :ro — le container doit pouvoir lire les fichiers
+      - /opt/frigate/web:/opt/frigate/web
     environment:
       - FRIGATE_RTSP_PASSWORD=changeme
     # Décommenter pour Coral USB TPU :
@@ -256,8 +295,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - /opt/frigate/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/frigate/nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - frigate
     networks:
@@ -280,7 +319,7 @@ EOF
 
 ---
 
-## Étape 7 : Configurer Nginx (HTTPS)
+## Étape 8 : Configurer Nginx (HTTPS)
 
 ### Générer le certificat auto-signé
 
@@ -318,7 +357,7 @@ http {
 
         client_max_body_size 0;
 
-        # Tout le trafic passe vers le nginx interne de Frigate (port 5000)
+        # Proxy vers le nginx interne de Frigate (port 5000)
         location / {
             proxy_pass         http://frigate:5000;
             proxy_http_version 1.1;
@@ -337,35 +376,6 @@ EOF
 
 ---
 
-## Étape 8 : Builder le frontend modernisé
-
-```bash
-cd /opt
-git clone https://github.com/Exrahn/FrigateNVR.git frigate-src
-cd frigate-src
-git checkout frontend-modernization
-cd web
-npm install
-
-# Augmenter la mémoire Node.js pour le build
-export NODE_OPTIONS="--max-old-space-size=4096"
-npm run build
-
-# Étape post-build (identique au Dockerfile officiel Frigate) :
-# Déplacer les fichiers Monaco Editor et nettoyer le dossier BASE_PATH
-mv dist/BASE_PATH/monacoeditorwork/* dist/assets/ 2>/dev/null || true
-rm -rf dist/BASE_PATH
-```
-
-Vérifier que le build a réussi :
-
-```bash
-ls -la /opt/frigate-src/web/dist/
-# Doit contenir : index.html, login.html, assets/, locales/, etc.
-```
-
----
-
 ## Étape 9 : Démarrer et vérifier
 
 ```bash
@@ -373,13 +383,14 @@ cd /opt/frigate
 docker compose up -d
 ```
 
-Vérifier les logs :
+Vérifier que les deux containers sont bien démarrés :
 
 ```bash
+docker compose ps
 docker compose logs -f
 ```
 
-Trouver l'IP du conteneur :
+Trouver l'IP du conteneur LXC :
 
 ```bash
 hostname -I
@@ -393,8 +404,8 @@ https://<IP_DU_CT>
 
 > Le navigateur affichera un avertissement pour le certificat auto-signé → cliquer **Avancer quand même**.
 
-Tu devrais maintenant voir le **nouveau Dashboard** avec les stats, la grille des caméras avec
-animations, la barre latérale avec le logo, et le header avec la recherche (⌘K) et les notifications.
+Tu devrais maintenant voir le **nouveau Dashboard** avec les stats, la grille des caméras,
+les animations, la barre latérale dépliable avec logo, et la recherche rapide (⌘K).
 
 ### Importer le certificat (optionnel, pour éviter l'avertissement)
 
@@ -403,7 +414,7 @@ Récupère le fichier `/opt/frigate/nginx/ssl/frigate.crt` et importe-le comme a
 | Plateforme  | Procédure |
 |-------------|-----------|
 | **Windows** | `certmgr.msc` → Autorités de certification racines de confiance → Importer |
-| **macOS**   | Trousseau d'accès → Système → Importer, puis définir comme "Toujours approuver" |
+| **macOS**   | Trousseau d'accès → Système → Importer, puis définir comme « Toujours approuver » |
 | **Android** | Paramètres → Sécurité → Certificats → Installer |
 | **iPhone**  | Envoyer le `.crt` par mail → Installer → Réglages → Général → À propos → Certificats |
 
@@ -411,7 +422,7 @@ Récupère le fichier `/opt/frigate/nginx/ssl/frigate.crt` et importe-le comme a
 
 ## Maintenance
 
-### Mise à jour de Frigate
+### Mise à jour de Frigate (image Docker)
 
 ```bash
 cd /opt/frigate
@@ -419,7 +430,7 @@ docker compose pull
 docker compose up -d
 ```
 
-### Mise à jour du frontend
+### Mise à jour du frontend modernisé
 
 ```bash
 cd /opt/frigate-src
@@ -429,13 +440,18 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 npm run build
 mv dist/BASE_PATH/monacoeditorwork/* dist/assets/ 2>/dev/null || true
 rm -rf dist/BASE_PATH
-cd /opt/frigate
-docker compose restart frigate
+
+# Copier les nouveaux fichiers dans le dossier hôte monté
+cp -r dist/* /opt/frigate/web/
+
+# Redémarrer Frigate pour prendre en compte les changements
+docker compose -f /opt/frigate/docker-compose.yml restart frigate
 ```
 
 ### Voir les logs
 
 ```bash
+# Tous les services
 docker compose -f /opt/frigate/docker-compose.yml logs -f
 
 # Frigate uniquement
@@ -479,7 +495,7 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 npm run build
 ```
 
-Si ça persiste, augmenter la RAM du CT depuis le host :
+Si ça persiste, augmenter la RAM du CT depuis le host Proxmox :
 
 ```bash
 pct set 200 --memory 8192
@@ -488,10 +504,21 @@ pct reboot 200
 
 ### Le frontend ne change pas après un build
 
-1. Vérifier que `dist/` contient des fichiers : `ls /opt/frigate-src/web/dist/`
-2. Vérifier le volume mount : `docker inspect frigate | grep -A5 "web/dist"`
-3. Redémarrer le container Frigate : `docker compose restart frigate`
-4. Vider le cache navigateur (Ctrl+Shift+R)
+1. Vérifier que `/opt/frigate/web/` contient des fichiers : `ls /opt/frigate/web/`
+2. Vérifier que le volume est bien monté : `docker inspect frigate | grep -A5 '"Mounts"'`
+3. Copier les fichiers à nouveau : `cp -r /opt/frigate-src/web/dist/* /opt/frigate/web/`
+4. Redémarrer le container : `docker compose -f /opt/frigate/docker-compose.yml restart frigate`
+5. Vider le cache navigateur (Ctrl+Shift+R)
+
+### Erreur "mounted volume is marked read-only" avec docker cp
+
+Ne pas utiliser `docker cp` pour mettre à jour les fichiers web.
+Copier directement dans le dossier hôte `/opt/frigate/web/` puis redémarrer :
+
+```bash
+cp -r /opt/frigate-src/web/dist/* /opt/frigate/web/
+docker compose -f /opt/frigate/docker-compose.yml restart frigate
+```
 
 ### Permission refusée pour /dev/dri ou /dev/bus/usb
 
@@ -520,22 +547,24 @@ Proxmox Host
 └── LXC Container (CT 200 — Debian 12, 6 Go RAM)
     ├── Docker Engine
     │   ├── frigate (ghcr.io/blakeblackshear/frigate:stable)
-    │   │   ├── /opt/frigate/web/ ← monté depuis /opt/frigate-src/web/dist/
-    │   │   ├── Port interne 5000 → nginx interne → API + UI
-    │   │   ├── Port 8554         → RTSP restream
-    │   │   └── Port 8555         → WebRTC
+    │   │   ├── /opt/frigate/web/  ← bind mount depuis /opt/frigate/web/ (hôte)
+    │   │   ├── Port interne 5000  → nginx interne → API + UI
+    │   │   ├── Port 8554          → RTSP restream
+    │   │   └── Port 8555          → WebRTC
     │   │
     │   └── frigate-nginx (nginx:alpine)
-    │       ├── Port 80  → Redirection HTTPS
-    │       └── Port 443 → Proxy HTTPS → frigate:5000
+    │       ├── Port 80   → Redirection HTTPS
+    │       └── Port 443  → Proxy HTTPS → frigate:5000
     │
     ├── /opt/frigate/
     │   ├── config/config.yml
     │   ├── storage/
+    │   ├── web/              ← fichiers du frontend buildé (bind mount → container)
     │   ├── nginx/nginx.conf
     │   └── nginx/ssl/
     │
-    └── /opt/frigate-src/web/dist/ → Frontend React modernisé
+    └── /opt/frigate-src/     ← source Git + build Node.js
+        └── web/dist/         ← résultat du build (copié dans /opt/frigate/web/)
 ```
 
 ---
