@@ -262,7 +262,7 @@ function ConfigEditor() {
   }
 
   return (
-    <div className="absolute bottom-2 left-0 right-0 top-2 md:left-2">
+    <div className="flex h-full w-full flex-col px-2 py-2">
       <div className="relative flex h-full flex-col overflow-hidden">
         <div className="mr-1 flex items-center justify-between">
           <div>
