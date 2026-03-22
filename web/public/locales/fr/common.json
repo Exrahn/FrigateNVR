@@ -86,7 +86,7 @@
     },
     "formattedTimestampMonthDayYear": {
       "12hour": "d MMM, yyyy",
-      "24hour": "d MMM,yyyy"
+      "24hour": "d MMM, yyyy"
     },
     "inProgress": "En cours",
     "invalidStartTime": "Heure de début invalide",
@@ -95,6 +95,7 @@
   },
   "button": {
     "apply": "Appliquer",
+    "applying": "Application…",
     "reset": "Réinitialiser",
     "disabled": "Désactivé",
     "save": "Enregistrer",
@@ -143,6 +144,11 @@
   },
   "menu": {
     "configuration": "Configuration",
+    "dashboard": "Tableau de bord",
+    "chat": "Discussion",
+    "actions": "Actions",
+    "profiles": "Profils",
+    "replay": "Rejouer",
     "language": {
       "en": "English (Anglais)",
       "withSystem": {
@@ -204,7 +210,7 @@
       "account": "Compte",
       "logout": "Se déconnecter",
       "setPassword": "Configurer un mot de passe",
-      "current": "Utilisateur actuel : {{user}}",
+      "current": "Utilisateur actuel : {{user}}",
       "title": "Utilisateur",
       "anonymous": "anonyme"
     },
@@ -249,8 +255,8 @@
     "save": {
       "title": "Enregistrer",
       "error": {
-        "noMessage": "Echec lors de l'enregistrement des changements de configuration",
-        "title": "Échec de l'enregistrement des changements de configuration : {{errorMessage}}"
+        "noMessage": "Échec lors de l'enregistrement des changements de configuration",
+        "title": "Échec de l'enregistrement des changements de configuration : {{errorMessage}}"
       }
     },
     "copyUrlToClipboard": "URL copiée dans le presse-papiers"
@@ -310,18 +316,53 @@
       "kbph": "ko/heure",
       "mbph": "Mo/heure",
       "gbph": "Go/heure"
-    }
+    },
+    "fps": "ips"
   },
   "information": {
     "pixels": "{{area}}px"
   },
   "field": {
     "optional": "Facultatif",
-    "internalID": "L'ID interne utilisée par Frigate dans la configuration et la base de donnêes"
+    "internalID": "L'ID interne utilisée par Frigate dans la configuration et la base de données"
   },
   "list": {
     "two": "{{0}} et {{1}}",
     "many": "{{items}}, et {{last}}",
     "separatorWithSpace": ", "
+  },
+  "dashboard": {
+    "camerasOnline": "Caméras en ligne",
+    "recording": "En enregistrement",
+    "detections24h": "Détections (24h)",
+    "storage": "Stockage",
+    "uptime": "Temps de fonctionnement",
+    "cameras": "Caméras",
+    "recentEvents": "Événements récents",
+    "noRecentEvents": "Aucun événement récent",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "viewAll": "Tout voir",
+    "refreshThumbnails": "Rafraîchir les miniatures",
+    "versionLabel": "Frigate v"
+  },
+  "commandPalette": {
+    "placeholder": "Rechercher des pages, caméras…",
+    "noResults": "Aucun résultat trouvé.",
+    "navigation": "Navigation",
+    "cameras": "Caméras",
+    "open": "Rechercher",
+    "search": "Rechercher…",
+    "shortcutHint": "Recherche rapide"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "recentAlerts": "Alertes récentes (24h)",
+    "noAlerts": "Aucune alerte récente",
+    "viewAll": "Voir tous les événements"
+  },
+  "sidebar": {
+    "expandSidebar": "Déplier le menu",
+    "collapseSidebar": "Replier le menu"
   }
 }
