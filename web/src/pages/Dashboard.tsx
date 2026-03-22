@@ -145,12 +145,14 @@ export default function Dashboard() {
     return `${minutes}m`;
   }, [stats]);
 
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return "0 B";
+  // Format storage size from megabytes (API returns MB)
+  const formatStorage = (mb: number) => {
+    if (mb === 0) return "0 MB";
     const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+    const sizes = ["MB", "GB", "TB"];
+    const i = Math.floor(Math.log(mb) / Math.log(k));
+    const idx = Math.min(i, sizes.length - 1);
+    return `${parseFloat((mb / Math.pow(k, idx)).toFixed(1))} ${sizes[idx]}`;
   };
 
   return (
@@ -189,7 +191,7 @@ export default function Dashboard() {
           label={t("dashboard.storage", { defaultValue: "Storage" })}
           value={
             storage
-              ? `${formatBytes(storage.used)} / ${formatBytes(storage.total)}`
+              ? `${formatStorage(storage.used)} / ${formatStorage(storage.total)}`
               : "--"
           }
           sublabel={storage ? `${storage.percent}%` : undefined}
