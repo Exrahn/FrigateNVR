@@ -22,7 +22,7 @@ export default function AppShell({ children }: AppShellProps) {
         <CommandPalette />
         <div
           className={cn(
-            "flex-1 overflow-hidden",
+            "flex-1 overflow-hidden pb-14",
           )}
         >
           {children}
